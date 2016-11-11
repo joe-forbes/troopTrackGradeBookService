@@ -1,0 +1,22 @@
+{
+  "webServer": {
+    "port": 1337
+  },
+  "loggingTargets": [ 
+    {
+      "targetType": "file", 
+      "targetConfig": {
+        "level" : "info",
+        "filename" : "./logs/all-logs.log",
+        "handleExceptions" : true,
+        "json" : true,
+        "maxsize" : 5242880,
+        "maxFiles" : 5,
+        "colorize" : false
+      }
+    },
+    {
+      "targetType": "console"
+    }
+  ]
+}

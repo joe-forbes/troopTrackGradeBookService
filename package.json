@@ -1,0 +1,48 @@
+{
+  "name": "troopTrackGradeBookService",
+  "version": "0.0.1",
+  "description": "Provides a single-call API call to retrieve a fine-grain view of achievements for a group of scouts in TroopTrack.",
+  "dependencies": {
+    "express": "3.0.6",
+    "winston": "*",
+    "nconf": "*"
+  },
+  "scripts": {
+    "test": "npm run test-all",
+    "test-all": "mocha -R spec",
+    "test-webServer": "mocha -R spec ./test/webServerTest.js",
+    "test-webServer-coverage": "istanbul cover _mocha ./test/webServerTest.js -R spec",
+    "test-all-coverage": "istanbul cover _mocha -- -R spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joe-forbes/troopTrackGradeBookService.git"
+  },
+  "keywords": [
+    "TroopTrack",
+    "Scouting",
+    "Node"
+  ],
+  "author": "Joe Forbes",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "devDependencies": {
+    "blanket": "^1.1.6",
+    "install": "^0.1.8",
+    "istanbul": "^0.4.5",
+    "mocha": "*",
+    "should": "^5.0.0",
+    "supertest": "*",
+    "test-console": "^0.7.1",
+    "tmp": "0.0.24"
+  },
+  "config": {
+    "blanket": {
+      "pattern": "",
+      "data-cover-never": [
+        "node_modules",
+        "test"
+      ]
+    }
+  }
+}
