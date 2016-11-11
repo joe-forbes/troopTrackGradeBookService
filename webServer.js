@@ -1,5 +1,5 @@
 /* webServer.js
- * The purpose of server.js is to receive, respond to, and route requests.
+ * The purpose of webServer.js is to receive, respond to, and route requests.
  */
 
 var express = require('express');
