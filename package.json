@@ -3,9 +3,11 @@
   "version": "0.0.1",
   "description": "Provides a single-call API call to retrieve a fine-grain view of achievements for a group of scouts in TroopTrack.",
   "dependencies": {
+    "chai": "^3.5.0",
     "express": "3.0.6",
-    "winston": "*",
-    "nconf": "*"
+    "nconf": "*",
+    "request": "^2.78.0",
+    "winston": "*"
   },
   "scripts": {
     "test": "npm run test-all",
@@ -31,6 +33,7 @@
     "install": "^0.1.8",
     "istanbul": "^0.4.5",
     "mocha": "*",
+    "nock": "^9.0.2",
     "should": "^5.0.0",
     "supertest": "*",
     "test-console": "^0.7.1",
