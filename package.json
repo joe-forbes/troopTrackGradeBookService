@@ -29,7 +29,6 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "devDependencies": {
-    "blanket": "^1.1.6",
     "install": "^0.1.8",
     "istanbul": "^0.4.5",
     "mocha": "*",
@@ -38,14 +37,5 @@
     "supertest": "*",
     "test-console": "^0.7.1",
     "tmp": "0.0.24"
-  },
-  "config": {
-    "blanket": {
-      "pattern": "",
-      "data-cover-never": [
-        "node_modules",
-        "test"
-      ]
-    }
   }
 }
