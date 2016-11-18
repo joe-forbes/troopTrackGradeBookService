@@ -17,10 +17,18 @@ function start(port) {
 
 
     request.post({url:'http://trooptrack.com:443/api/v1/tokens', form: {key:'value'}}, function(err,httpResponse,body){
-      if (!err && httpResponse.statusCode == 200) {
-        console.log(body) //write the body to the console
+      if (err) {
+        logger.error({'err': err});
+        res.send(500);
+      } else {
+        if (httpResponse.statusCode == 200) {
+          console.log(body); //write the body to the console
+          res.send();
+        } else {
+          logger.error({'httpResponse': httpResponse});
+          res.send(500);
+        }
       }
-      res.send();
     })
 
   });
