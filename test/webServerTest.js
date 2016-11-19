@@ -13,9 +13,9 @@ var logger = require("../logger");
 
 webServer.start(1337);
 
-describe('webServer.js tests', function() {
+describe('webServer.js tests', function () {
 
-    it('should have an index route accessible via GET', function(done) {
+    it('should have an index route accessible via GET', function (done) {
         var api = nock('http://trooptrack.com:443')
             .post('/api/v1/tokens')
             .reply(200, {
@@ -23,11 +23,11 @@ describe('webServer.js tests', function() {
                 "message": "This is a mocked response"
             });
 
-      request(webServer).get('/').expect(200, done);
+        request(webServer).get('/').expect(200, done);
     });
 
 
-    it('should make a POST call to TroopTrack server to get the token', function(done) {
+    it('should make a POST call to TroopTrack server to get the token', function (done) {
 
         var api = nock('http://trooptrack.com:443')
             .post('/api/v1/tokens')
@@ -37,14 +37,14 @@ describe('webServer.js tests', function() {
             });
 
         request(webServer).get('/').expect(200)
-            .end(function(err, res) {
+            .end(function (err, res) {
                 expect(api.isDone()).to.be.true;
                 if (err) return done(err);
                 done();
             });
     });
-    
-    it('should return an error if the response from TroopTrack API has non-200 statusCode.', function(done){
+
+    it('should return an error if the response from TroopTrack API has non-200 statusCode.', function (done) {
 
         var api = nock('http://trooptrack.com:443')
             .post('/api/v1/tokens')
@@ -54,7 +54,7 @@ describe('webServer.js tests', function() {
             });
 
         request(webServer).get('/').expect(500)
-            .end(function(err, res) {
+            .end(function (err, res) {
                 expect(api.isDone()).to.be.true;
                 if (err) return done(err);
                 done();
@@ -62,14 +62,14 @@ describe('webServer.js tests', function() {
 
     });
 
-    it('should return an error if the response from TroopTrack API is an error', function(done){
+    it('should return an error if the response from TroopTrack API is an error', function (done) {
 
         var api = nock('http://trooptrack.com:443')
             .post('/api/v1/tokens')
             .replyWithError('Danger, Will Robinson');
 
         request(webServer).get('/').expect(500)
-            .end(function(err, res) {
+            .end(function (err, res) {
                 expect(api.isDone()).to.be.true;
                 if (err) return done(err);
                 done();
@@ -78,7 +78,7 @@ describe('webServer.js tests', function() {
     });
 
 
-    it('should pass the X-Username header from the request to TroopTrack', function(done){
+    it('should pass the X-Username header from the request to TroopTrack', function (done) {
 
         var api = nock('http://trooptrack.com:443', {
             reqheaders: {
@@ -92,7 +92,7 @@ describe('webServer.js tests', function() {
             .get('/')
             .set('X-Username', 'testuser')
             .expect(500)
-            .end(function(err, res) {
+            .end(function (err, res) {
                 expect(api.isDone()).to.be.true;
                 if (err) return done(err);
                 done();
