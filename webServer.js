@@ -9,29 +9,35 @@ var request = require('request');
 var webServer = module.exports = express();
 
 function start(port) {
-  webServer.listen(port);
-  logger.info( "webServer listening on port " + port + ".");
+    webServer.listen(port);
+    logger.info("webServer listening on port " + port + ".");
 
-  webServer.get('/', function(req, res) {
-    logger.debug("in app.get(). req.headers=", req.headers);
+    webServer.get('/', function (req, res) {
+        logger.debug("in app.get(). req.headers=", req.headers);
 
-
-    request.post({url:'http://trooptrack.com:443/api/v1/tokens', form: {key:'value'}}, function(err,httpResponse,body){
-      if (err) {
-        logger.error({'err': err});
-        res.send(500);
-      } else {
-        if (httpResponse.statusCode == 200) {
-          console.log(body); //write the body to the console
-          res.send();
-        } else {
-          logger.error({'httpResponse': httpResponse});
-          res.send(500);
+        var requestOptions = {
+            url: 'http://trooptrack.com:443/api/v1/tokens',
+            headers: {
+                'X-Username': req.header('X-Username')
+            }
         }
-      }
-    })
 
-  });
+        request.post(requestOptions, function (err, httpResponse, body) {
+            if (err) {
+                logger.error({'err': err});
+                res.send(500);
+            } else {
+                if (httpResponse.statusCode == 200) {
+                    console.log(body); //write the body to the console
+                    res.send();
+                } else {
+                    logger.error({'httpResponse': httpResponse});
+                    res.send(500);
+                }
+            }
+        })
+
+    });
 
 }
 
