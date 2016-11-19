@@ -86,12 +86,34 @@ describe('webServer.js tests', function () {
             }
         })
             .post('/api/v1/tokens')
-            .replyWithError('Danger, Will Robinson');
+            .reply();
 
         request(webServer)
             .get('/')
             .set('X-Username', 'testuser')
-            .expect(500)
+            .expect(200)
+            .end(function (err, res) {
+                expect(api.isDone()).to.be.true;
+                if (err) return done(err);
+                done();
+            });
+
+    });
+
+    it('should pass the X-User-Password header from the request to TroopTrack', function (done) {
+
+        var api = nock('http://trooptrack.com:443', {
+            reqheaders: {
+                'X-User-Password': 'testpassword'
+            }
+        })
+            .post('/api/v1/tokens')
+            .reply();
+
+        request(webServer)
+            .get('/')
+            .set('X-Username', 'testuser')
+            .expect(200)
             .end(function (err, res) {
                 expect(api.isDone()).to.be.true;
                 if (err) return done(err);
