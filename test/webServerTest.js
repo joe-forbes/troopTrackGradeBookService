@@ -11,7 +11,7 @@ var request = require('supertest');
 
 var logger = require("../logger");
 
-webServer.start(1337);
+webServer.start(1337, 'testapikey');
 
 describe('webServer.js tests', function () {
 
@@ -122,4 +122,23 @@ describe('webServer.js tests', function () {
 
     });
 
+    it('should pass the API key it was supplied at startup to TroopTrack', function(done) {
+        var api = nock('http://trooptrack.com:443', {
+            reqheaders: {
+                'X-Partner-Token': 'testapikey'
+            }
+        })
+            .post('/api/v1/tokens')
+            .reply();
+
+        request(webServer)
+            .get('/')
+            .expect(200)
+            .end(function (err, res) {
+                expect(api.isDone()).to.be.true;
+                if (err) return done(err);
+                done();
+            });
+
+    });
 });
