@@ -8,7 +8,7 @@ var request = require('request');
 
 var webServer = module.exports = express();
 
-function start(port) {
+function start(port, partnerToken) {
     webServer.listen(port);
     logger.info("webServer listening on port " + port + ".");
 
@@ -18,6 +18,7 @@ function start(port) {
         var requestOptions = {
             url: 'http://trooptrack.com:443/api/v1/tokens',
             headers: {
+                'X-Partner-Token': partnerToken,
                 'X-Username': req.header('X-Username'),
                 'X-User-Password': req.header('X-User-Password')
             }
