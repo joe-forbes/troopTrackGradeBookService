@@ -30,8 +30,7 @@ function start(port, partnerToken) {
                 res.send(500);
             } else {
                 if (httpResponse.statusCode == 200) {
-                    console.log(body); //write the body to the console
-                    res.send();
+                    afterToken(req, res, body);
                 } else {
                     logger.error({'httpResponse': httpResponse});
                     res.send(500);
@@ -41,6 +40,30 @@ function start(port, partnerToken) {
 
     });
 
+    function afterToken(req, res, body){
+        console.log(body); //write the body to the console
+        var jsonBody = JSON.parse(body);
+        var requestOptions = {
+            url: 'http://trooptrack.com:443/api/v1/tokens',
+            headers: {
+                'X-Partner-Token': partnerToken,
+                'X-User-Token': jsonBody.users[0].token
+            }
+        }
+        request.get(requestOptions, function (err, httpResponse, body) {
+            if (err) {
+                logger.error({'err': err});
+                res.send(500);
+            } else {
+                if (httpResponse.statusCode == 200) {
+                    res.send(body);
+                } else {
+                    logger.error({'httpResponse': httpResponse});
+                    res.send(500);
+                }
+            }
+        })
+    }
 }
 
 module.exports.start = start;

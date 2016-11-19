@@ -123,6 +123,7 @@ describe('webServer.js tests', function () {
     });
 
     it('should pass the API key it was supplied at startup to TroopTrack', function(done) {
+
         var api = nock('http://trooptrack.com:443', {
             reqheaders: {
                 'X-Partner-Token': 'testapikey'
@@ -141,4 +142,46 @@ describe('webServer.js tests', function () {
             });
 
     });
+
+    it('should store the User token retrieved by TroopTrack and use it on a subsequent call to a different endpoint', function(done) {
+
+        var tokenApi = nock('http://trooptrack.com:443', {
+            reqheaders: {
+                'X-Partner-Token': 'testapikey',
+                'X-Username': 'testuser',
+                'X-User-Password': 'testpassword'
+            }
+        })
+            .post('/api/v1/tokens')
+            .reply(200, {
+                "users": [
+                    {
+                        "token": "testusertoken"
+                    }
+                ]
+            });
+
+        var otherApi = nock('http://trooptrack.com:443', {
+            reqheaders: {
+                'X-Partner-Token': 'testapikey',
+                'X-User-Token': 'testusertoken'
+            }
+        })
+            .get('/api/v1/tokens')
+            .reply();
+
+        request(webServer)
+            .get('/')
+            .set('X-User-Password', 'testpassword')
+            .set('X-Username', 'testuser')
+            .expect(200)
+            .end(function (err, res) {
+                expect(tokenApi.isDone()).to.be.true;
+                expect(otherApi.isDone()).to.be.true;
+                if (err) return done(err);
+                done();
+            });
+
+    });
+
 });
