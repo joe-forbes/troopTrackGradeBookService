@@ -112,7 +112,7 @@ describe('webServer.js tests', function () {
 
         request(webServer)
             .get('/')
-            .set('X-Username', 'testuser')
+            .set('X-User-Password', 'testpassword')
             .expect(200)
             .end(function (err, res) {
                 expect(api.isDone()).to.be.true;
