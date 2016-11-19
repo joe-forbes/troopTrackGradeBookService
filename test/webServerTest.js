@@ -39,22 +39,6 @@ describe('webServer.js tests', function() {
         request(webServer).get('/').expect(200)
             .end(function(err, res) {
                 expect(api.isDone()).to.be.true;
-                done();
-            });
-    });
-
-    it('should make a POST call to TroopTrack server to get the token', function(done) {
-
-        var api = nock('http://trooptrack.com:443')
-            .post('/api/v1/tokens')
-            .reply(200, {
-                "status": 200,
-                "message": "This is a mocked response"
-            });
-
-        request(webServer).get('/').expect(200)
-            .end(function(err, res) {
-                expect(api.isDone()).to.be.true;
                 if (err) return done(err);
                 done();
             });
