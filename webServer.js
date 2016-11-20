@@ -12,6 +12,8 @@ function start(port, partnerToken) {
     webServer.listen(port);
     logger.info("webServer listening on port " + port + ".");
 
+    var userToken = '';
+
     webServer.get('/', function (req, res) {
         logger.debug("in app.get(). req.headers=", req.headers);
 
@@ -30,7 +32,11 @@ function start(port, partnerToken) {
                 res.send(500);
             } else {
                 if (httpResponse.statusCode == 200) {
-                    afterToken(req, res, body);
+                    var jsonBody = JSON.parse(body);
+                    if (!(jsonBody.users === undefined)) {
+                        userToken = jsonBody.users[0].token;
+                    }
+                    afterToken(req, res);
                 } else {
                     logger.error({'httpResponse': httpResponse});
                     res.send(500);
@@ -40,14 +46,12 @@ function start(port, partnerToken) {
 
     });
 
-    function afterToken(req, res, body){
-        console.log(body); //write the body to the console
-        var jsonBody = JSON.parse(body);
+    function afterToken(req, res){
         var requestOptions = {
             url: 'http://trooptrack.com:443/api/v1/tokens',
             headers: {
                 'X-Partner-Token': partnerToken,
-                'X-User-Token': jsonBody.users[0].token
+                'X-User-Token': userToken
             }
         }
         request.get(requestOptions, function (err, httpResponse, body) {
