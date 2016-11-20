@@ -8,6 +8,7 @@
 
 try {
     var util = require("util");
+    var os = require('os');
     var logger = require("./logger");
     var configger = require("./configger");
     var webServer = require('./webServer');
@@ -19,7 +20,7 @@ try {
 
 var config = configger.load({
     http: {port: 8080},
-    apiTokenFile: '/home/joe/Keys/troopTrackApi'
+    apiTokenFile: os.homedir() + '/Keys/troopTrackApi'
 });
 
 var fs = require('fs');
