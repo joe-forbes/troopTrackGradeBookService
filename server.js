@@ -19,11 +19,11 @@ try {
 
 var config = configger.load({
     http: {port: 8080},
-    apiTokenFile: '~/keys/troopTrackApi'
+    apiTokenFile: '/home/joe/Keys/troopTrackApi'
 });
 
 var fs = require('fs');
-var apiToken = fs.readFileSync(config.apiTokenFile).toString();
+var apiToken = fs.readFileSync(config.apiTokenFile).toString().trim();
 
 logger.addTargets(config.loggingTargets);
 

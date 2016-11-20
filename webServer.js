@@ -15,10 +15,10 @@ function start(port, partnerToken) {
     var userToken = '';
 
     webServer.get('/', function (req, res) {
-        logger.debug("in app.get(). req.headers=", req.headers);
+        logger.debug("in app.get().", req.headers);
 
         var requestOptions = {
-            url: 'http://trooptrack.com:443/api/v1/tokens',
+            url: 'https://trooptrack.com:443/api/v1/tokens',
             headers: {
                 'X-Partner-Token': partnerToken,
                 'X-Username': req.header('X-Username'),
@@ -26,13 +26,15 @@ function start(port, partnerToken) {
             }
         }
 
+        logger.debug(requestOptions);
         request.post(requestOptions, function (err, httpResponse, body) {
             if (err) {
                 logger.error({'err': err});
                 res.send(500);
             } else {
-                if (httpResponse.statusCode == 200) {
+                if (httpResponse.statusCode == 201) {
                     var jsonBody = JSON.parse(body);
+                    logger.debug(jsonBody);
                     if (!(jsonBody.users === undefined)) {
                         userToken = jsonBody.users[0].token;
                     }
@@ -48,12 +50,13 @@ function start(port, partnerToken) {
 
     function afterToken(req, res){
         var requestOptions = {
-            url: 'http://trooptrack.com:443/api/v1/tokens',
+            url: 'https://trooptrack.com:443/api/v1/tokens',
             headers: {
                 'X-Partner-Token': partnerToken,
                 'X-User-Token': userToken
             }
         }
+        logger.debug(requestOptions);
         request.get(requestOptions, function (err, httpResponse, body) {
             if (err) {
                 logger.error({'err': err});

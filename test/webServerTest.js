@@ -15,7 +15,7 @@ webServer.start(1337, 'testapikey');
 
 describe('webServer.js tests', function () {
 
-    var tokenApi = nock('http://trooptrack.com:443', {
+    var tokenApi = nock('https://trooptrack.com:443', {
         reqheaders: {
             'X-Partner-Token': 'testapikey',
             'X-Username': 'testuser',
@@ -24,7 +24,7 @@ describe('webServer.js tests', function () {
     })
         .persist()
         .post('/api/v1/tokens')
-        .reply(200, {
+        .reply(201, {
             "users": [
                 {
                     "token": "testusertoken"
@@ -32,7 +32,7 @@ describe('webServer.js tests', function () {
             ]
         });
 
-    var otherApi = nock('http://trooptrack.com:443', {
+    var otherApi = nock('https://trooptrack.com:443', {
         reqheaders: {
             'X-Partner-Token': 'testapikey',
             'X-User-Token': 'testusertoken'
@@ -67,9 +67,9 @@ describe('webServer.js tests', function () {
             });
     });
 
-    it('should return an error if the response from TroopTrack API has non-200 statusCode.', function (done) {
+    it('should return an error if the response from TroopTrack API has non-201 statusCode.', function (done) {
 
-        var api = nock('http://trooptrack.com:443')
+        var api = nock('https://trooptrack.com:443')
             .post('/api/v1/tokens')
             .reply(500, {
                 "status": 500,
@@ -87,7 +87,7 @@ describe('webServer.js tests', function () {
 
     it('should return an error if the response from TroopTrack API is an error', function (done) {
 
-        var api = nock('http://trooptrack.com:443')
+        var api = nock('https://trooptrack.com:443')
             .post('/api/v1/tokens')
             .replyWithError('Danger, Will Robinson');
 
@@ -133,7 +133,7 @@ describe('webServer.js tests', function () {
 
     it('should return an error if the second call to TroopTrack results in non-200 status code', function(done) {
 
-        var myTokenApi = nock('http://trooptrack.com:443', {
+        var myTokenApi = nock('https://trooptrack.com:443', {
             reqheaders: {
                 'X-Partner-Token': 'testapikey',
                 'X-Username': 'mytestuser',
@@ -141,7 +141,7 @@ describe('webServer.js tests', function () {
             }
         })
             .post('/api/v1/tokens')
-            .reply(200, {
+            .reply(201, {
                 "users": [
                     {
                         "token": "mytestusertoken"
@@ -149,7 +149,7 @@ describe('webServer.js tests', function () {
                 ]
             });
 
-        var myOtherApi = nock('http://trooptrack.com:443', {
+        var myOtherApi = nock('https://trooptrack.com:443', {
             reqheaders: {
                 'X-Partner-Token': 'testapikey',
                 'X-User-Token': 'mytestusertoken'
@@ -177,7 +177,7 @@ describe('webServer.js tests', function () {
 
     it('should return an error if the second call to TroopTrack results in an error', function(done) {
 
-        var myTokenApi = nock('http://trooptrack.com:443', {
+        var myTokenApi = nock('https://trooptrack.com:443', {
             reqheaders: {
                 'X-Partner-Token': 'testapikey',
                 'X-Username': 'mytestuser',
@@ -185,7 +185,7 @@ describe('webServer.js tests', function () {
             }
         })
             .post('/api/v1/tokens')
-            .reply(200, {
+            .reply(201, {
                 "users": [
                     {
                         "token": "mytestusertoken"
@@ -193,7 +193,7 @@ describe('webServer.js tests', function () {
                 ]
             });
 
-        var myOtherApi = nock('http://trooptrack.com:443', {
+        var myOtherApi = nock('https://trooptrack.com:443', {
             reqheaders: {
                 'X-Partner-Token': 'testapikey',
                 'X-User-Token': 'mytestusertoken'
@@ -218,7 +218,7 @@ describe('webServer.js tests', function () {
 
     it('should return an error if the call to get the User Token from TroopTrack does not contain a token', function(done) {
 
-        var myTokenApi = nock('http://trooptrack.com:443', {
+        var myTokenApi = nock('https://trooptrack.com:443', {
             reqheaders: {
                 'X-Partner-Token': 'testapikey',
                 'X-Username': 'mytestuser',
