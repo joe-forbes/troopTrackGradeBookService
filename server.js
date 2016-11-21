@@ -13,23 +13,21 @@ try {
     var configger = require("./configger");
     var webServer = require('./webServer');
     var packageJson = require('./package.json');
+    var fs = require('fs');
+    var config = configger.load({
+        http: {port: 8080},
+        apiTokenFile: os.homedir() + '/Keys/troopTrackApi'
+    });
+
+    var apiToken = fs.readFileSync(config.apiTokenFile).toString().trim();
+
+    logger.addTargets(config.loggingTargets);
+
+    logger.info("app version: " + packageJson.version);
+    logger.debug("config: " + util.inspect(config, {depth: null}));
+    logger.debug("package.json: " + util.inspect(packageJson, {depth: null}));
+    webServer.start(config.webServer.port, apiToken);
 } catch (e) {
     console.log("Error initializing application", e);
     return;
 }
-
-var config = configger.load({
-    http: {port: 8080},
-    apiTokenFile: os.homedir() + '/Keys/troopTrackApi'
-});
-
-var fs = require('fs');
-var apiToken = fs.readFileSync(config.apiTokenFile).toString().trim();
-
-logger.addTargets(config.loggingTargets);
-
-logger.info("app version: " + packageJson.version);
-logger.debug("config: " + util.inspect(config, {depth: null}));
-logger.debug("package.json: " + util.inspect(packageJson, {depth: null}));
-
-webServer.start(config.webServer.port, apiToken);

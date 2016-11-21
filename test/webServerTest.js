@@ -100,6 +100,24 @@ describe('webServer.js tests', function () {
 
     });
 
+    it('should return an error if the response from TroopTrack API has statusCode 500.', function (done) {
+
+        var api = nock('https://trooptrack.com:443')
+            .post('/api/v1/tokens')
+            .reply(500, {
+                "status": 500,
+                "message": "This is a mocked response"
+            });
+
+        request(webServer).get('/').expect(500)
+            .end(function (err, res) {
+                expect(api.isDone()).to.be.true;
+                if (err) return done(err);
+                done();
+            });
+
+    });
+
     it('should pass the correct headers to TroopTrack', function (done) {
 
         request(webServer)
@@ -226,7 +244,7 @@ describe('webServer.js tests', function () {
             }
         })
             .post('/api/v1/tokens')
-            .reply(200, {
+            .reply(201, {
                 "fusers": [
                     {
                         "foo": "mytestusertoken"
