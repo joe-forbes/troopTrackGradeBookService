@@ -1,33 +1,11 @@
 /*
  * server.js - main entry point for the application
- * The purpose of server.js is to read configuration from configuration sources 
- * (defaults, command-line, options files, and so on)
- * and start the webServer.
- * here we are....
+ * The sole purpose of server.js is to invoke startup on the app.
+ * Server.js and app.js are separate in order to support testing;
+ * I don't know how to test a javascript module that starts itself.
+ * Some code is invoked the first time a module is 'required' and
+ * can't be undone or repeated, as needed to test different scenarios.
  */
 
-try {
-    var util = require("util");
-    var os = require('os');
-    var logger = require("./logger");
-    var configger = require("./configger");
-    var webServer = require('./webServer');
-    var packageJson = require('./package.json');
-    var fs = require('fs');
-    var config = configger.load({
-        http: {port: 8080},
-        apiTokenFile: os.homedir() + '/Keys/troopTrackApi'
-    });
-
-    var apiToken = fs.readFileSync(config.apiTokenFile).toString().trim();
-
-    logger.addTargets(config.loggingTargets);
-
-    logger.info("app version: " + packageJson.version);
-    logger.debug("config: " + util.inspect(config, {depth: null}));
-    logger.debug("package.json: " + util.inspect(packageJson, {depth: null}));
-    webServer.start(config.webServer.port, apiToken);
-} catch (e) {
-    console.log("Error initializing application", e);
-    return;
-}
+var app = require('./app.js');
+app.start();
