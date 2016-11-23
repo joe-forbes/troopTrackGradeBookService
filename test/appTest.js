@@ -51,6 +51,47 @@ describe('app.js tests', function () {
         done();
     });
 
+    it('should throw an error if the configuration file cannot be found', function (done) {
+        var mockFs = require('mock-fs');
+
+        var passedPort = '';
+        var passedPartnerToken = '';
+
+        var config = {
+            "webServer": {
+                "port": 668
+            },
+            "loggingTargets": []
+        };
+
+        var defaultKeyFileFolder = path.relative('', os.homedir() + '/Keys');
+
+        mockRequire('../webServer', {
+            start : function(port, partnerToken) {
+                passedPort = port;
+                passedPartnerToken = partnerToken;
+            }
+        });
+
+        mockFsConfig = { 'configOops.json' : JSON.stringify(config) };
+        mockFsConfig[defaultKeyFileFolder] = {'troopTrackApi': 'testkey'};
+        mockFs(mockFsConfig);
+
+        var errorOccurred = false;
+
+        try {
+            app.start();
+        } catch (err) {
+            errorOccurred = true;
+        }
+
+        mockFs.restore();
+
+        expect(errorOccurred).to.be.true;
+
+        done();
+    });
+
     it('should read configuration from file specified in environment variable', function (done) {
         var mockFs = require('mock-fs');
 
