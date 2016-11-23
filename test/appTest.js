@@ -51,7 +51,102 @@ describe('app.js tests', function () {
         done();
     });
 
-    it('should read use port 8080 if not specified in config file', function (done) {
+    it('should read configuration from file specified in environment variable', function (done) {
+        var mockFs = require('mock-fs');
+
+        var passedPort = '';
+        var passedPartnerToken = '';
+
+        var config = {
+            "webServer": {
+                "port": 668
+            },
+            "loggingTargets": []
+        };
+
+        var config2 = {
+            "webServer": {
+                "port": 664
+            },
+            "loggingTargets": []
+        };
+
+        var defaultKeyFileFolder = path.relative('', os.homedir() + '/Keys');
+
+        mockRequire('../webServer', {
+            start : function(port, partnerToken) {
+                passedPort = port;
+                passedPartnerToken = partnerToken;
+            }
+        });
+
+        mockFsConfig = { 'config.json' : JSON.stringify(config) };
+        mockFsConfig[defaultKeyFileFolder] = {'troopTrackApi': 'testkey', 'otherConfig.json' : JSON.stringify(config2)};
+        mockFs(mockFsConfig);
+
+        process.env.configFile = os.homedir() + '/Keys/otherConfig.json';
+
+        app.start();
+
+        delete process.env.configFile;
+
+        mockFs.restore();
+
+        expect(passedPort).to.equal(664);
+        expect(passedPartnerToken).to.equal('testkey');
+
+        done();
+    });
+
+    it('should read configuration from file specified on command line', function (done) {
+        var mockFs = require('mock-fs');
+
+        var passedPort = '';
+        var passedPartnerToken = '';
+
+        var config = {
+            "webServer": {
+                "port": 668
+            },
+            "loggingTargets": []
+        };
+
+        var config2 = {
+            "webServer": {
+                "port": 662
+            },
+            "loggingTargets": []
+        };
+
+        var defaultKeyFileFolder = path.relative('', os.homedir() + '/Keys');
+
+        mockRequire('../webServer', {
+            start : function(port, partnerToken) {
+                passedPort = port;
+                passedPartnerToken = partnerToken;
+            }
+        });
+
+        mockFsConfig = { 'config.json' : JSON.stringify(config) };
+        mockFsConfig[defaultKeyFileFolder] = {'troopTrackApi': 'testkey', 'anotherConfig.json' : JSON.stringify(config2)};
+        mockFs(mockFsConfig);
+
+        process.argv[process.argv.length] = '--configFile';
+        process.argv[process.argv.length] = os.homedir() + '/Keys/anotherConfig.json';
+
+        app.start();
+
+        process.argv.splice(process.argv.length - 2, 2);
+
+        mockFs.restore();
+
+        expect(passedPort).to.equal(662);
+        expect(passedPartnerToken).to.equal('testkey');
+
+        done();
+    });
+
+    it('should use port 8080 if not specified in config file', function (done) {
         var mockFs = require('mock-fs');
 
         var passedPort = '';
